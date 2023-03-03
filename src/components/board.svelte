@@ -67,12 +67,5 @@
 
 		/* ccols, rows**/
 	}
-	.item {
-		border: 1px solid black;
-		text-align: center;
-		padding: 1.2em;
-		border-radius: 2em;
-		height: 20px;
-		width: 20px;
-	}
+
 </style>
