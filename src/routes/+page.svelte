@@ -1,8 +1,9 @@
 <script>
+	import { Center, Title } from '@svelteuidev/core';
 	import Board from '../components/board.svelte';
 </script>
 
-<h1>Connect Four Leo/Norie</h1>
+<Title mt="lg" mb="lg" align="center"> Connect Four</Title>
 <main>
 	<Board />
 </main>

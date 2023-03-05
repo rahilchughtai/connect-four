@@ -20,20 +20,21 @@ export const findFirstEmpty = (col: number, fields: string[][]): ChipTuple | nul
 	return null;
 };
 
-export const checkWinner = (fields: string[][]) => {
+type Line = {
+	row: number;
+	col: number;
+}[];
+
+export const checkWinner = (fields: string[][]): [boolean, Line] => {
 	for (const line of AllLines) {
 		const won = line.map((line) => {
 			const { row, col } = line;
 			return fields[row][col];
 		});
 
-		if (won.every((val) => val === 'red')) {
-			return true;
-		}
-
-		if (won.every((val) => val === 'blue')) {
-			return true;
+		if (won.every((val) => val === 'red') || won.every((val) => val === 'blue')) {
+			return [true, line];
 		}
 	}
-	return false;
+	return [false, []];
 };
