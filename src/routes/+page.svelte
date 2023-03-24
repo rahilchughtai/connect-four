@@ -1,10 +1,12 @@
 <script>
+	import { Center, Title } from '@svelteuidev/core';
 	import Board from '../components/board.svelte';
+	import Select from '../components/select.svelte';
 </script>
 
-<h1>Connect Four Leo/Norie</h1>
+<Title mt="lg" mb="lg" align="center">Connect Four Juicy Lips !!!</Title>
 <main>
-	<Board />
+	<Select />
 </main>
 
 <style>

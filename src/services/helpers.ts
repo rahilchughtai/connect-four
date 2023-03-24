@@ -13,6 +13,7 @@ export const getHorizontals = () => {
 			Horizontals.push(items);
 		}
 	}
+	console.log('horizontals:', Horizontals.length);
 	return Horizontals;
 };
 
@@ -29,6 +30,8 @@ export const getVerticals = () => {
 			Verticals.push(items);
 		}
 	}
+	console.log('verticals', Verticals.length);
+
 	return Verticals;
 };
 
@@ -36,9 +39,9 @@ const getDiagonalFour = (row: number, col: number, right = true) => {
 	const shift = right ? 1 : -1;
 	return [
 		{ row, col },
-		{ row: row + 1 * shift, col: col + 1 * shift },
-		{ row: row + 2 * shift, col: col + 2 * shift },
-		{ row: row + 3 * shift, col: col + 3 * shift }
+		{ row: row + 1 * shift, col: col + 1 },
+		{ row: row + 2 * shift, col: col + 2 },
+		{ row: row + 3 * shift, col: col + 3 }
 	];
 };
 
@@ -49,15 +52,50 @@ export const getDiagonals = () => {
 			DiagonalsRight.push(getDiagonalFour(row, col));
 		}
 	}
-
 	const DiagonalsLeft = [];
 
 	for (let row = 3; row <= 5; row++) {
-		for (let col = 3; col <= 6; col++) {
+		for (let col = 0; col <= 3; col++) {
 			DiagonalsLeft.push(getDiagonalFour(row, col, false));
 		}
 	}
-
-	console.log('diagonals', DiagonalsLeft.length + DiagonalsRight.length);
 	return [...DiagonalsRight, ...DiagonalsLeft];
+};
+
+/**
+ *
+ * Returns the row index of first empty element in col
+ * @param State
+ * @param col
+ * @returns
+ */
+const findEmpty = (State: string[][], col: number): number | null => {
+	for (let row = 0; row < 6; row++) {
+		if (State[row][col] === 'white') {
+			return row;
+		}
+	}
+	return null;
+};
+
+export const copyArray = (array: string[][]) => {
+	const copy: string[][] = [];
+	for (let i = 0; i < array.length; i++) {
+		const row: string[] = array[i].slice();
+		copy.push(row);
+	}
+	return copy;
+};
+export const nextStates = (State: any[][], player: string): string[][][] => {
+	const states = [];
+
+	for (let col = 0; col < 7; col++) {
+		const row = findEmpty(State, col);
+		if (row !== null) {
+			const copy = copyArray(State);
+			copy[row][col] = player;
+			states.push(copy);
+		}
+	}
+	return states;
 };
