@@ -3,7 +3,7 @@
 	import Board from '../components/board.svelte';
 </script>
 
-<Title mt="lg" mb="lg" align="center"> Connect Four</Title>
+<Title mt="lg" mb="lg" align="center">Connect Four Juicy Lips !!!</Title>
 <main>
 	<Board />
 </main>

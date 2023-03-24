@@ -1,16 +1,28 @@
 <script lang="ts">
-	import { Button, Center } from '@svelteuidev/core';
+	import { Button, Center, Title } from '@svelteuidev/core';
 
 	import Chip from './chip.svelte';
-	import { findFirstEmpty, checkWinner } from '../services/algorithms';
+	import { findFirstEmpty, checkWinner, checkDraw } from '../services/algorithms';
 	let rows = 6;
 	let cols = 7;
+	let winnerElements: any[] = [];
 
 	let gameOver = false;
+	let gameDraw = false;
 	let fields = [...Array(rows)].map((_) => Array(cols).fill('white'));
 	let playerOneTurn = true;
 
 	$: currentColor = playerOneTurn ? 'red' : 'blue';
+
+	$: isWinningChip = (row: number, col: number) => {
+		for (const element of winnerElements) {
+			if (element[0] === row && element[1] === col) {
+				console.log('winner!');
+				return true;
+			}
+		}
+		return false;
+	};
 
 	const updateFields = (row: number, col: number) => {
 		colorFields(row, col, currentColor);
@@ -21,8 +33,10 @@
 	};
 
 	const ResetGame = () => {
+		winnerElements = [];
 		clearFields();
 		playerOneTurn = true;
+		gameDraw = false;
 		gameOver = false;
 	};
 	const colorFields = (row: number, col: number, color: string) => {
@@ -32,7 +46,7 @@
 	};
 
 	const makeMove = (column: number) => {
-		if (gameOver) {
+		if (gameOver || gameDraw) {
 			return;
 		}
 		const res = findFirstEmpty(column, fields);
@@ -43,12 +57,16 @@
 		const { row, col } = res;
 		updateFields(row, col);
 
+		const draw = checkDraw(fields);
+
+		if (draw) {
+			gameDraw = true;
+			alert('We have a draw!');
+			gameOver = true;
+		}
 		const [winner, line] = checkWinner(fields);
 		if (winner) {
-			for (const field of line) {
-				const { row, col } = field;
-				colorFields(row, col, 'green');
-			}
+			winnerElements = line.map((el) => [el.row, el.col]);
 			alert('We have a winner!');
 			gameOver = true;
 		}
@@ -62,17 +80,31 @@
 	{/each}
 	{#each [0, 1, 2, 3, 4, 5].reverse() as row}
 		{#each [0, 1, 2, 3, 4, 5, 6] as col}
-			<Chip color={fields[row][col]} playerOne={playerOneTurn} {row} {col} />
+			<Chip isWinner={isWinningChip(row, col)} color={fields[row][col]} {row} {col} />
 		{/each}
 	{/each}
 </div>
+
+<Center>
+	<Title>
+		{currentColor.toUpperCase()}'s Turn
+	</Title>
+</Center>
+
 <Center mt="lg">
-	{#if gameOver}
+	{#if gameOver || gameDraw}
 		<Button on:click={ResetGame}>Restart Game</Button>
 	{/if}
 </Center>
 
 <style>
+	.bg {
+		background-image: url('https://cdn.discordapp.com/attachments/699364951571300584/1081229129426415627/1677851819061.jpg'); /* The image used */
+		height: 20px; /* You must set a specified height */
+		background-position: center; /* Center the image */
+		background-repeat: no-repeat; /* Do not repeat the image */
+		background-size: contain;
+	}
 	.grid {
 		width: 800px;
 		display: grid;

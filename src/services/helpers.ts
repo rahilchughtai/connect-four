@@ -13,6 +13,7 @@ export const getHorizontals = () => {
 			Horizontals.push(items);
 		}
 	}
+	console.log('horizontals:', Horizontals.length);
 	return Horizontals;
 };
 
@@ -29,6 +30,8 @@ export const getVerticals = () => {
 			Verticals.push(items);
 		}
 	}
+	console.log('verticals', Verticals.length);
+
 	return Verticals;
 };
 
@@ -36,9 +39,9 @@ const getDiagonalFour = (row: number, col: number, right = true) => {
 	const shift = right ? 1 : -1;
 	return [
 		{ row, col },
-		{ row: row + 1 * shift, col: col + 1 * shift },
-		{ row: row + 2 * shift, col: col + 2 * shift },
-		{ row: row + 3 * shift, col: col + 3 * shift }
+		{ row: row + 1 * shift, col: col + 1 },
+		{ row: row + 2 * shift, col: col + 2 },
+		{ row: row + 3 * shift, col: col + 3 }
 	];
 };
 
@@ -49,15 +52,12 @@ export const getDiagonals = () => {
 			DiagonalsRight.push(getDiagonalFour(row, col));
 		}
 	}
-
 	const DiagonalsLeft = [];
 
 	for (let row = 3; row <= 5; row++) {
-		for (let col = 3; col <= 6; col++) {
+		for (let col = 0; col <= 3; col++) {
 			DiagonalsLeft.push(getDiagonalFour(row, col, false));
 		}
 	}
-
-	console.log('diagonals', DiagonalsLeft.length + DiagonalsRight.length);
 	return [...DiagonalsRight, ...DiagonalsLeft];
 };
