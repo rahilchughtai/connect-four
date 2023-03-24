@@ -2,7 +2,17 @@
 	import { Button, Center, Title } from '@svelteuidev/core';
 
 	import Chip from './chip.svelte';
-	import { findFirstEmpty, checkWinner, checkDraw } from '../services/algorithms';
+	import {
+		findFirstEmpty,
+		checkWinner,
+		checkDraw,
+		heuristic,
+		type PlayerFieldValue
+	} from '../services/algorithms';
+	import { nextStates } from '../services/helpers';
+
+	export let playerOneImage='';
+	export let playerTwoImage='';
 	let rows = 6;
 	let cols = 7;
 	let winnerElements: any[] = [];
@@ -46,6 +56,7 @@
 	};
 
 	const makeMove = (column: number) => {
+		console.log(nextStates(fields, currentColor));
 		if (gameOver || gameDraw) {
 			return;
 		}
@@ -57,6 +68,8 @@
 		const { row, col } = res;
 		updateFields(row, col);
 
+		const h = heuristic(fields);
+		console.log(h);
 		const draw = checkDraw(fields);
 
 		if (draw) {
@@ -80,7 +93,14 @@
 	{/each}
 	{#each [0, 1, 2, 3, 4, 5].reverse() as row}
 		{#each [0, 1, 2, 3, 4, 5, 6] as col}
-			<Chip isWinner={isWinningChip(row, col)} color={fields[row][col]} {row} {col} />
+			<Chip
+				{playerOneImage}
+				{playerTwoImage}
+				isWinner={isWinningChip(row, col)}
+				color={fields[row][col]}
+				{row}
+				{col}
+			/>
 		{/each}
 	{/each}
 </div>

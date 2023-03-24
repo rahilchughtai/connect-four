@@ -61,3 +61,41 @@ export const getDiagonals = () => {
 	}
 	return [...DiagonalsRight, ...DiagonalsLeft];
 };
+
+/**
+ *
+ * Returns the row index of first empty element in col
+ * @param State
+ * @param col
+ * @returns
+ */
+const findEmpty = (State: string[][], col: number): number | null => {
+	for (let row = 0; row < 6; row++) {
+		if (State[row][col] === 'white') {
+			return row;
+		}
+	}
+	return null;
+};
+
+export const copyArray = (array: string[][]) => {
+	const copy: string[][] = [];
+	for (let i = 0; i < array.length; i++) {
+		const row: string[] = array[i].slice();
+		copy.push(row);
+	}
+	return copy;
+};
+export const nextStates = (State: any[][], player: string): string[][][] => {
+	const states = [];
+
+	for (let col = 0; col < 7; col++) {
+		const row = findEmpty(State, col);
+		if (row !== null) {
+			const copy = copyArray(State);
+			copy[row][col] = player;
+			states.push(copy);
+		}
+	}
+	return states;
+};

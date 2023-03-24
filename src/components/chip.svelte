@@ -2,19 +2,38 @@
 	export let row: number = 0;
 	export let col: number = 0;
 	export let color = 'red';
+	$: bgColor = color;
 	export let isWinner = false;
+	export let playerOneImage: string;
+	export let playerTwoImage: string;
 
 	let path = 'images/white.jpg';
 
-	$: getImage = (color: string) => {
+	$: pathToColor = (path: string) => {
 		if (isWinner) {
-			return 'images/norieSmile.jpg';
+			return 'green';
 		}
+
+		if (path === 'images/white.jpg') {
+			return 'black';
+		}
+		return color;
+	};
+
+	$: getBorderColor = () => {
+		if (isWinner) {
+			return 'green';
+		}
+		return color;
+	};
+
+	$: getImage = (color: string) => {
 		if (color === 'red') {
-			return 'images/nuri.jpg';
+			console.log(playerOneImage);
+			return playerOneImage;
 		}
 		if (color === 'blue') {
-			return 'images/leoSmile.jpg';
+			return playerTwoImage;
 		}
 		return 'images/white.jpg';
 	};
@@ -22,13 +41,8 @@
 </script>
 
 <!-- svelte-ignore a11y-missing-attribute -->
-<img
-	style="border-color: {isWinner ? 'green' : 'black'};"
-	class="item"
-	src={path}
-	width="40"
-	height="40"
-/>
+
+<img style="border-color: {pathToColor(path)}" class="item" src={path} width="40" height="40" />
 
 <style>
 	.item {

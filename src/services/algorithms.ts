@@ -1,4 +1,4 @@
-import { getDiagonals, getHorizontals, getVerticals } from './helpers';
+import { getDiagonals, getHorizontals, getVerticals, nextStates } from './helpers';
 
 export interface ChipTuple {
 	row: number;
@@ -30,18 +30,22 @@ export const checkDraw = (fields: string[][]) => {
 	return fields[5].every((val) => val !== 'white');
 };
 
-export const checkWinner = (fields: string[][]): [boolean, Line] => {
+export type PlayerFieldValue = 'red' | 'blue' | 'white';
+
+export const checkWinner = (
+	fields: PlayerFieldValue[][]
+): [boolean, Line, PlayerFieldValue | null] => {
 	for (const line of AllLines) {
-		const won = line.map((line) => {
+		const won: PlayerFieldValue[] = line.map((line) => {
 			const { row, col } = line;
 			return fields[row][col];
 		});
 
 		if (won.every((val) => val === 'red') || won.every((val) => val === 'blue')) {
-			return [true, line];
+			return [true, line, won[-1]];
 		}
 	}
-	return [false, []];
+	return [false, [], null];
 };
 
 export const heuristic = (State: string[][]): number => {
@@ -85,3 +89,11 @@ export const heuristic = (State: string[][]): number => {
 
 	return result;
 };
+const utility = (fields: PlayerFieldValue[][]) => {
+	const [a, b, c] = checkWinner(fields);
+	if (c == null) {
+		return 0;
+	}
+	return c == 'red' ? 1 : -1;
+};
+
